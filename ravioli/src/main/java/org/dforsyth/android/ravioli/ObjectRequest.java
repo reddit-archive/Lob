@@ -31,6 +31,7 @@
 package org.dforsyth.android.ravioli;
 
 import android.net.Uri;
+import android.util.Log;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
@@ -126,8 +127,8 @@ public class ObjectRequest<T> extends Request<RavioliResponse<T>> {
     }
 
     @Override
-    public byte[] getBody() {
-        return mBody;
+    public byte[] getBody() throws AuthFailureError {
+        return mBody != null ? mBody : super.getBody();
     }
 
     @Override
@@ -163,6 +164,8 @@ public class ObjectRequest<T> extends Request<RavioliResponse<T>> {
             String json = new String(
                     response.data,
                     HttpHeaderParser.parseCharset(response.headers));
+
+            Log.d("Ravioli:ObjectRequest", "response = " + json);
 
             RavioliResponse<T> ravioliResponse = new RavioliResponse<T>(
                     response,

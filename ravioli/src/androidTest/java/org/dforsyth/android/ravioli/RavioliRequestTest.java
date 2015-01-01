@@ -33,10 +33,13 @@ package org.dforsyth.android.ravioli;
 import android.net.Uri;
 import android.test.AndroidTestCase;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request.Method;
 
 import org.dforsyth.android.ravioli.util.Constants;
 
+import java.nio.charset.Charset;
+import java.util.Arrays;
 import java.util.Map;
 
 /**
@@ -164,7 +167,7 @@ public class RavioliRequestTest extends AndroidTestCase {
         assertEquals(headers.get(Constants.HEADER_USER_AGENT), Constants.DEFAULT_USER_AGENT);
     }
 
-    public void testBody() {
+    public void testExplicitBody() {
         byte[] TEST_BYTES = "something".getBytes();
 
         RavioliRequest<Object> request = new RavioliRequest.Builder<Object>(
@@ -177,6 +180,36 @@ public class RavioliRequestTest extends AndroidTestCase {
 
         ObjectRequest<Object> objectRequest = request.createRequest(null, null, null);
 
-        assertEquals(TEST_BYTES, objectRequest.getBody());
+        try {
+            assertEquals(TEST_BYTES, objectRequest.getBody());
+        } catch (AuthFailureError authFailureError) {
+            authFailureError.printStackTrace();
+            assertTrue(false);
+        }
+    }
+
+    public void testParamBody() {
+
+        RavioliRequest<Object> request = new RavioliRequest.Builder<Object>(
+                client,
+                Object.class
+        )
+        .setMethod(Method.POST)
+        .addParam("test", "param")
+        .build();
+
+        ObjectRequest<Object> objectRequest = request.createRequest(null, null, null);
+
+        try {
+            assertTrue(
+                    Arrays.equals(
+                            "test=param&".getBytes(Charset.forName("UTF-8")),
+                            objectRequest.getBody()
+                    )
+            );
+        } catch (AuthFailureError authFailureError) {
+            authFailureError.printStackTrace();
+            assertTrue(false);
+        }
     }
 }
