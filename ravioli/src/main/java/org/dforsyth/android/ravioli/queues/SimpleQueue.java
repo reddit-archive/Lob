@@ -34,17 +34,31 @@ import android.content.Context;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.HttpStack;
 import com.android.volley.toolbox.Volley;
 
 /**
  * A simple RavioliQueue
  */
 public class SimpleQueue implements RavioliQueue {
+    private HttpStack mHttpStack;
     private RequestQueue mQueue;
+
+    public SimpleQueue() {
+        mHttpStack = null;
+    }
+
+    public SimpleQueue(HttpStack stack) {
+        mHttpStack = stack;
+    }
 
     @Override
     public void prepare(Context context) {
-        mQueue = Volley.newRequestQueue(context);
+        if (mHttpStack != null) {
+            mQueue = Volley.newRequestQueue(context, mHttpStack);
+        } else {
+            mQueue = Volley.newRequestQueue(context);
+        }
         mQueue.start();
     }
 
