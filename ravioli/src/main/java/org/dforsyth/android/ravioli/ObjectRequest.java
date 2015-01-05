@@ -61,7 +61,7 @@ public class ObjectRequest<T> extends Request<RavioliResponse<T>> {
     private final byte[] mBody;
 
     /**
-     * Make a GET request and return a parsed object from JSON.
+     * Make a request and parse an object out of the response body
      *
      * @param method
      * @param url URL of the request to make
@@ -160,25 +160,31 @@ public class ObjectRequest<T> extends Request<RavioliResponse<T>> {
     protected Response<RavioliResponse<T>> parseNetworkResponse(NetworkResponse response) {
         // TODO: check status code for errors and send raviolierrors
 
+        String data;
         try {
-            String json = new String(
+            data = new String(
                     response.data,
                     HttpHeaderParser.parseCharset(response.headers));
-
-            Log.d("Ravioli:ObjectRequest", "response = " + json);
-
-            RavioliResponse<T> ravioliResponse = new RavioliResponse<T>(
-                    response,
-                    (T) mEncoder.decode(json, mType)
-            );
-
-            return Response.success(
-                    ravioliResponse,
-                    HttpHeaderParser.parseCacheHeaders(response));
         } catch (UnsupportedEncodingException e) {
             return Response.error(new ParseError(e));
-        } catch (DecodeError e) {
-            return Response.error(new ParseError(e));
         }
+
+        Log.d("ObjectRequest", "response = " + data);
+
+        T decoded = null;
+        if (mEncoder != null && mType != null) {
+            try {
+                decoded = mEncoder.decode(data, mType);
+            } catch (DecodeError e) {
+                return Response.error(new ParseError(e));
+            }
+        }
+
+        RavioliResponse<T> ravioliResponse = new RavioliResponse<>(response, decoded);
+
+        return Response.success(
+                ravioliResponse,
+                HttpHeaderParser.parseCacheHeaders(response)
+        );
     }
 }

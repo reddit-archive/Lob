@@ -190,6 +190,10 @@ public class RavioliRequest<T> {
             mHeaders = new HashMap<>(mClient.getHeaders());
         }
 
+        public Builder(Ravioli client) {
+            this(client, null);
+        }
+
         public Builder<T> setMethod(int method) {
             if (method == Method.DEPRECATED_GET_OR_POST) {
                 throw new IllegalArgumentException("DEPRECATED_GET_OR_POST");

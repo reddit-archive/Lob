@@ -38,20 +38,11 @@ import java.util.Map;
  * A beefy response type
  */
 public class RavioliResponse<T> {
-
-    private int mStatusCode;
-    private Map<String, String> mHeaders;
-    private long mNetworkTimeMS;
-    private boolean mNotModified;
-
+    private NetworkResponse mNetworkResponse;
     private T mDecoded;
 
     public RavioliResponse(NetworkResponse response, T decoded) {
-        mStatusCode = response.statusCode;
-        mHeaders = response.headers;
-        mNetworkTimeMS = response.networkTimeMs;
-        mNotModified = response.notModified;
-
+        mNetworkResponse = response;
         mDecoded = decoded;
     }
 
@@ -59,19 +50,7 @@ public class RavioliResponse<T> {
         return mDecoded;
     }
 
-    public int getStatusCode() {
-        return mStatusCode;
-    }
-
-    public Map<String, String> getHeaders() {
-        return mHeaders;
-    }
-
-    public long getNetworkTimeMS() {
-        return mNetworkTimeMS;
-    }
-
-    public boolean isNotModified() {
-        return mNotModified;
+    public NetworkResponse getNetworkResponse() {
+        return mNetworkResponse;
     }
 }
