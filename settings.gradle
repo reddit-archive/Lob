@@ -1,2 +1,2 @@
-include ':app', ':ravioli', ':Volley'
+include ':app', ':Volley', ':lob'
 project(':Volley').projectDir = new File(settingsDir, '../Volley')
