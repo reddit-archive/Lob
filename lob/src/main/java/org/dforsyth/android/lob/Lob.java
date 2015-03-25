@@ -34,6 +34,8 @@ import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
 import com.android.volley.RetryPolicy;
 
 import org.dforsyth.android.lob.encoders.Encoder;
@@ -97,6 +99,20 @@ public class Lob {
 
     protected void submitRequest(ObjectRequest request) {
         Log.d("Lob", "request submitted: " + request.getUrl());
+        if (request.getMethod() == Request.Method.GET) {
+            Log.d("Lob", "params: ");
+            Map<String, String> p = null;
+            try {
+                p = request.getParams();
+                if (p != null) {
+                    for (String key : p.keySet()) {
+                        Log.d("Lob", "k=" + key + " v=" + p.get(key));
+                    }
+                }
+            } catch (AuthFailureError authFailureError) {
+                authFailureError.printStackTrace();
+            }
+        }
 
         mQueue.submitRequest(request);
     }

@@ -31,6 +31,7 @@
 package org.dforsyth.android.lob.queues;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -41,6 +42,8 @@ import com.android.volley.toolbox.Volley;
  * A simple LobQueue
  */
 public class SimpleQueue implements LobQueue {
+    private static String TAG = SimpleQueue.class.getSimpleName();
+
     private HttpStack mHttpStack;
     private RequestQueue mQueue;
 
@@ -54,6 +57,11 @@ public class SimpleQueue implements LobQueue {
 
     @Override
     public void prepare(Context context) {
+        if (mQueue != null) {
+            Log.d(TAG, "mQueue != null");
+            return;
+        }
+
         if (mHttpStack != null) {
             mQueue = Volley.newRequestQueue(context, mHttpStack);
         } else {
