@@ -132,7 +132,14 @@ public class ObjectRequest<T> extends Request<LobResponse<T>> {
 
     @Override
     public byte[] getBody() throws AuthFailureError {
-        return mBody != null ? mBody : super.getBody();
+        if (mBody != null) {
+            return mBody;
+        }
+
+
+
+
+        return super.getBody();
     }
 
     @Override

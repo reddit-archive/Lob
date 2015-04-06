@@ -40,6 +40,7 @@ import com.android.volley.toolbox.RequestFuture;
 
 import java.lang.reflect.Type;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
@@ -205,6 +206,13 @@ public class LobRequest<T> {
 
         public Builder<T> addQueryParameter(String key, String value) {
             mUriBuilder.appendQueryParameter(key, value);
+            return this;
+        }
+
+        public Builder<T> addQueryParameter(String key, List<String> values) {
+            for (String value : values) {
+                mUriBuilder.appendQueryParameter(key, value);
+            }
             return this;
         }
 
