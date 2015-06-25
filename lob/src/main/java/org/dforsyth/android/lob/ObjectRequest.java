@@ -136,9 +136,6 @@ public class ObjectRequest<T> extends Request<LobResponse<T>> {
             return mBody;
         }
 
-
-
-
         return super.getBody();
     }
 
@@ -180,7 +177,7 @@ public class ObjectRequest<T> extends Request<LobResponse<T>> {
             return Response.error(new ParseError(e));
         }
 
-        Log.d("ObjectRequest", "response = " + data);
+        Log.d("ObjectRequest", "url = " + getUrl() + " response = " + data);
 
         T decoded = null;
         if (mEncoder != null && mType != null) {
