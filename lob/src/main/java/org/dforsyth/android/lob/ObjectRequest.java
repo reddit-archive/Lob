@@ -59,6 +59,7 @@ public class ObjectRequest<T> extends Request<LobResponse<T>> {
     private final Map<String, String> mPostParams;
     private final LobDynamic mDynamic;
     private final byte[] mBody;
+    private String mBodyContentType;
 
     /**
      * Make a request and parse an object out of the response body
@@ -160,8 +161,6 @@ public class ObjectRequest<T> extends Request<LobResponse<T>> {
 
         return super.getUrl();
     }
-
-    private String mBodyContentType;
 
     @Override
     public String getBodyContentType() {
