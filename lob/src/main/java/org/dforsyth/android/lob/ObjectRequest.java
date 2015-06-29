@@ -108,10 +108,16 @@ public class ObjectRequest<T> extends Request<LobResponse<T>> {
             if (dynamicHeaders != null) {
                 headers.putAll(dynamicHeaders);
             }
+
         }
 
         for (String k : headers.keySet()) {
             Log.d("headers", k + ": " + headers.get(k));
+        }
+
+        // here's a fun way to override something...
+        if (headers.containsKey("Content-Type")) {
+            mBodyContentType = headers.get("Content-Type");
         }
 
         return headers.size() > 0 ? headers : super.getHeaders();
@@ -153,6 +159,18 @@ public class ObjectRequest<T> extends Request<LobResponse<T>> {
         }
 
         return super.getUrl();
+    }
+
+    private String mBodyContentType;
+
+    @Override
+    public String getBodyContentType() {
+        // return super.getBodyContentType();
+        if (mBodyContentType != null) {
+            return mBodyContentType;
+        }
+
+        return super.getBodyContentType();
     }
 
     public Response.Listener<LobResponse<T>> getListener() {
